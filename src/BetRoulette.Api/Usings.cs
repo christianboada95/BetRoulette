@@ -1,3 +1,8 @@
-﻿global using BetRoulette.Application.DataTransferObjects;
+﻿global using BetRoulette.Api.Extensions;
+
+global using BetRoulette.Application;
+global using BetRoulette.Application.DataTransferObjects;
 
 global using BetRoulette.Domain.Entities;
+
+global using BetRoulette.Infrastructure;

@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
@@ -17,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BetRoulette.Application\BetRoulette.Application.csproj" />
     <ProjectReference Include="..\BetRoulette.Domain\BetRoulette.Domain.csproj" />
+    <ProjectReference Include="..\BetRoulette.Infrastructure\BetRoulette.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
