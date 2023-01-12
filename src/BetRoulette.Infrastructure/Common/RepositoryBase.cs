@@ -27,9 +27,13 @@ namespace BetRoulette.Infrastructure.Common
             return entity;
         }
 
-        public virtual Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
+        public virtual async Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
         {
-            throw new NotImplementedException();
+            if (!await _databaseAsync.HashExistsAsync(_HashTableName, id.ToString()))
+                return null;
+
+            var entity = await _databaseAsync.HashGetAsync(_HashTableName, id.ToString()).ConfigureAwait(false);
+            return JsonSerializer.Deserialize<T>(entity);
         }
 
         public virtual async Task<List<T>?> ListAsync(CancellationToken cancellationToken = default)
@@ -45,9 +49,16 @@ namespace BetRoulette.Infrastructure.Common
             return obj;
         }
 
-        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if (await _databaseAsync.HashExistsAsync(_HashTableName, entity.Id.ToString()))
+            {
+                var value = JsonSerializer.Serialize(entity);
+                var entry = new HashEntry(entity.Id.ToString(), value);
+
+                await _databaseAsync.HashSetAsync(_HashTableName, new HashEntry[]
+                    {entry}).ConfigureAwait(false);
+            }
         }
     }
 }

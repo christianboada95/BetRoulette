@@ -1,5 +1,6 @@
 ﻿using BetRoulette.Application.DataTransferObjects.Responses;
 using BetRoulette.Domain.Enums;
+using BetRoulette.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
@@ -20,11 +21,13 @@ namespace BetRoulette.Api.Filters
             var exception = context.Exception.InnerException ?? context.Exception;
             HttpStatusCode statusCode = exception switch
             {
+                NotFoundException => HttpStatusCode.NotFound,
                 ArgumentNullException => HttpStatusCode.InternalServerError,
                 _ => HttpStatusCode.InternalServerError
             };
             AppStatusCode errorCode = exception switch
             {
+                NotFoundRouletteException => AppStatusCode.BusinessValidationError,
                 ArgumentNullException => AppStatusCode.UnexpectedError,
                 _ => AppStatusCode.UnexpectedError
             };

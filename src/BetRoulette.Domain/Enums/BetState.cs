@@ -1,5 +1,5 @@
 ﻿namespace BetRoulette.Domain.Enums;
-public enum BetStates
+public enum BetState
 {
     Win,
     Lose

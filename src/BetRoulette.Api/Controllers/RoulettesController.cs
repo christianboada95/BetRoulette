@@ -34,13 +34,6 @@ public class RoulettesController : ControllerBase
     [HttpGet(Name = "GetRoulettes")]
     public async Task<ActionResult<RouletteListResponse>> Get()
     {
-        //var values = Enumerable.Range(1, 5).Select(index => new Roulette()
-        //{
-        //    Id = Guid.NewGuid(),
-        //    Name = Summaries[Random.Shared.Next(Summaries.Length)],
-        //    State = RouletteStates.Open
-        //}).ToArray();
-
         var values = await _rouletteService.ListAll();
         var response = new RouletteListResponse
         {
@@ -55,20 +48,22 @@ public class RoulettesController : ControllerBase
     [HttpGet("{rouletteId:guid}")]
     public async Task<ActionResult> GetRoulette([FromRoute] Guid rouletteId)
     {
-        //var values = Enumerable.Range(1, 5).Select(index => new Roulette()
-        //{
-        //    Id = Guid.NewGuid(),
-        //    Name = Summaries[Random.Shared.Next(Summaries.Length)],
-        //    State = RouletteStates.Open
-        //}).ToArray();
-
-        return Ok(rouletteId);
+        var roulette = await _rouletteService.Get(rouletteId.ToString()).ConfigureAwait(false);
+        return Ok(roulette);
     }
 
-    [HttpPatch(Name = "OpenRoulette")]
-    public async Task<IActionResult> Patch([FromBody] OpenRouletteRequest request)
+    [HttpPost("{rouletteId:guid}/Open")]
+    public async Task<IActionResult> OpenRoulette([FromRoute] Guid rouletteId)
     {
-        _logger.LogInformation(request.RouletteId);
-        return Ok("Succesfuly Open Roulette");
+        _logger.LogInformation(rouletteId.ToString());
+        await _rouletteService.Open(rouletteId.ToString()).ConfigureAwait(false);
+        return Ok("Roulette open successfully.");
+    }
+    [HttpPost("{rouletteId:guid}/Close")]
+    public async Task<IActionResult> CloseRoulette([FromRoute] Guid rouletteId)
+    {
+        _logger.LogInformation(rouletteId.ToString());
+        await _rouletteService.Close(rouletteId.ToString()).ConfigureAwait(false);
+        return Ok("Roulette close successfully.");
     }
 }

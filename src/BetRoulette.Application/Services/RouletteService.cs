@@ -1,5 +1,7 @@
 ﻿using BetRoulette.Application.Interfaces;
 using BetRoulette.Domain.Entities;
+using BetRoulette.Domain.Enums;
+using BetRoulette.Domain.Exceptions;
 using BetRoulette.Domain.Interfaces;
 
 namespace BetRoulette.Application.Services
@@ -13,15 +15,19 @@ namespace BetRoulette.Application.Services
             _rouletteRepository = rouletteRepository;
         }
 
-        public Task Close(string rouletteId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Roulette> Create(string rouletteName)
         {
             var roulette = new Roulette(rouletteName);
             await _rouletteRepository.AddAsync(roulette).ConfigureAwait(false);
+            return roulette;
+        }
+
+        public async Task<Roulette> Get(string rouletteId)
+        {
+            var roulette = await _rouletteRepository.GetByIdAsync(rouletteId).ConfigureAwait(false);
+            if (roulette is null)
+                throw new NotFoundRouletteException($"{rouletteId} not found in Database");
+
             return roulette;
         }
 
@@ -31,7 +37,15 @@ namespace BetRoulette.Application.Services
             return list.ToArray();
         }
 
-        public Task Open(string rouletteId)
+        public async Task Open(string rouletteId)
+        {
+            var roulette = await Get(rouletteId);
+            roulette.State = RouletteState.Open;
+
+            await _rouletteRepository.UpdateAsync(roulette).ConfigureAwait(false);
+        }
+
+        public Task Close(string rouletteId)
         {
             throw new NotImplementedException();
         }
