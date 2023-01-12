@@ -17,7 +17,7 @@ namespace BetRoulette.UnitTest
         }
 
         [Fact]
-        public async Task Create_ShouldReturnRouletteId_WhenCreateNewRouletteAsync()
+        public async Task Post_ShouldReturnRouletteId_WhenCreateNewRouletteAsync()
         {
             // Arrange
 
@@ -34,7 +34,7 @@ namespace BetRoulette.UnitTest
         [InlineData("")]
         [InlineData(null)]
         [InlineData("Nombre muy largo para la ruleta valido")]
-        public async Task Create_ShouldReturnRouletteId_WhenSendInvalidRouletteNameAsync(string name)
+        public async Task Post_ShouldReturnRouletteId_WhenSendInvalidRouletteNameAsync(string name)
         {
             // Act
             var result = await _controller.Create(name);

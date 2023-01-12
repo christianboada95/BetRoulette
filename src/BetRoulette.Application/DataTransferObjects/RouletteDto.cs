@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BetRoulette.Domain.Enums;
 
 namespace BetRoulette.Application.DataTransferObjects;
-public record RouletteDto
-{
-    [Required]
-    public string Name { get; init; }
-}
+
+public record RouletteDto(string Id, string Name, RouletteStates State);

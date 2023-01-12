@@ -8,7 +8,7 @@ public static class StartupSetup
     {
         // Cache
         services.AddMemoryCache();
-        services.AddRedisConfiguration(config);
+        //services.AddRedisConfiguration(config);
 
         services.AddControllers()
             .ConfigureApiBehaviorOptions(op => op.SuppressModelStateInvalidFilter = true)
