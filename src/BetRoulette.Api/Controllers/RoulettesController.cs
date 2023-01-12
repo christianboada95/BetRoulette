@@ -1,3 +1,4 @@
+using BetRoulette.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetRoulette.Api.Controllers;
@@ -19,14 +20,13 @@ public class RoulettesController : ControllerBase
     }
 
     [HttpPost(Name = "CreateRoulette")]
-    public async Task<IActionResult> Post(RouletteDto rouletteDto)
+    public async Task<IActionResult> Create([FromBody] string rouletteName)
     {
         var roulette = new Roulette()
         {
             Id = Guid.NewGuid(),
-            Name = rouletteDto.Name,
-            Description = "Lorem impsum dolor sit ammet",
-            State = true
+            Name = rouletteName,
+            State = RouletteStates.Open
         };
         return Ok(roulette);
         //return CreatedAtAction("CreateRoulette", rullete);
@@ -39,9 +39,16 @@ public class RoulettesController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Name = Summaries[Random.Shared.Next(Summaries.Length)],
-            State = true
+            State = RouletteStates.Open
         }).ToArray();
 
         return Ok(values);
+    }
+
+    [HttpPatch(Name = "OpenRoulette")]
+    public async Task<IActionResult> Open([FromBody] string rouletteId)
+    {
+        _logger.LogInformation(rouletteId);
+        return Ok("Succesfuly Open Roulette");
     }
 }

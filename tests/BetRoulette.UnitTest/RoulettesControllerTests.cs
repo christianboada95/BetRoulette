@@ -1,4 +1,6 @@
 using BetRoulette.Api.Controllers;
+using BetRoulette.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace BetRoulette.UnitTest
@@ -15,9 +17,31 @@ namespace BetRoulette.UnitTest
         }
 
         [Fact]
-        public void Test1()
+        public async Task Create_ShouldReturnRouletteId_WhenCreateNewRouletteAsync()
         {
+            // Arrange
 
+            // Act
+            var result = await _controller.Create("Roulette Name");
+
+            // Assert
+            result.Should().NotBeNull();
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            objectResult.Value.As<Roulette>().Id.Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("Nombre muy largo para la ruleta valido")]
+        public async Task Create_ShouldReturnRouletteId_WhenSendInvalidRouletteNameAsync(string name)
+        {
+            // Act
+            var result = await _controller.Create(name);
+
+            // Assert
+            result.Should().NotBeNull();
+            //result.Should().BeOfType<BadRequestObjectResult>();
         }
     }
 }

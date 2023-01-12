@@ -1,9 +1,12 @@
-﻿namespace BetRoulette.Domain.Entities;
+﻿using BetRoulette.Domain.Common;
+using BetRoulette.Domain.Enums;
 
-public class Roulette
+namespace BetRoulette.Domain.Entities;
+
+public class Roulette : EntityBase
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
-    public string Description { get; set; }
-    public bool State { get; set; }
+    public short? Result { get; set; }
+    public Bet[]? Bets { get; set; }
+    public RouletteStates State { get; set; }
 }
