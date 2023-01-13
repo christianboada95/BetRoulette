@@ -2,5 +2,6 @@
 public enum BetState
 {
     Win,
-    Lose
+    Lose,
+    Progress
 }

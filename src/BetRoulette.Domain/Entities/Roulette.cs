@@ -7,14 +7,14 @@ public class Roulette : EntityBase
 {
     public string Name { get; set; }
     public short? Result { get; set; }
-    public Bet[]? Bets { get; set; }
+    public List<Bet>? Bets { get; set; }
     public RouletteState State { get; set; }
 
     public Roulette(string name)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Bets = new Bet[] { };
+        Bets = new List<Bet>();
         State = RouletteState.Close;
     }
 }

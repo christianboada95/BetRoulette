@@ -1,5 +1,5 @@
 ﻿namespace BetRoulette.Domain.Enums;
-public enum BetColor
+public enum Color
 {
     Black, Red
 }

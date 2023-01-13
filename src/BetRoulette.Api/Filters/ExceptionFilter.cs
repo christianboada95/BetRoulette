@@ -22,12 +22,14 @@ namespace BetRoulette.Api.Filters
             HttpStatusCode statusCode = exception switch
             {
                 NotFoundException => HttpStatusCode.NotFound,
+                ConflictException => HttpStatusCode.Conflict,
                 ArgumentNullException => HttpStatusCode.InternalServerError,
                 _ => HttpStatusCode.InternalServerError
             };
             AppStatusCode errorCode = exception switch
             {
                 NotFoundRouletteException => AppStatusCode.BusinessValidationError,
+                ConflictOpenRouletteException => AppStatusCode.BusinessValidationError,
                 ArgumentNullException => AppStatusCode.UnexpectedError,
                 _ => AppStatusCode.UnexpectedError
             };

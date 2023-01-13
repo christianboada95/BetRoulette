@@ -40,25 +40,19 @@ namespace BetRoulette.Infrastructure.Common
         {
             var list = await _databaseAsync.HashGetAllAsync(_HashTableName);
 
-            if (!list.Any())
-                return null;
+            if (!list.Any()) return null;
 
-            var obj = Array.ConvertAll(list, val =>
-                    JsonSerializer.Deserialize<T>(val.Value)).ToList();
-
-            return obj;
+            return Array.ConvertAll(list, val =>
+                    JsonSerializer.Deserialize<T>(val.Value!)).ToList()!;
         }
 
         public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            if (await _databaseAsync.HashExistsAsync(_HashTableName, entity.Id.ToString()))
-            {
-                var value = JsonSerializer.Serialize(entity);
-                var entry = new HashEntry(entity.Id.ToString(), value);
+            var value = JsonSerializer.Serialize(entity);
+            var entry = new HashEntry(entity.Id.ToString(), value);
 
-                await _databaseAsync.HashSetAsync(_HashTableName, new HashEntry[]
-                    {entry}).ConfigureAwait(false);
-            }
+            await _databaseAsync.HashSetAsync(_HashTableName, new HashEntry[]
+                {entry}).ConfigureAwait(false);
         }
     }
 }

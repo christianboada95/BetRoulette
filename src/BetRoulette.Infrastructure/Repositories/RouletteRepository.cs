@@ -4,7 +4,7 @@ using StackExchange.Redis;
 
 namespace BetRoulette.Infrastructure.Repositories;
 
-public class RouletteRepository : RepositoryBase<Roulette>//, IDisposable
+sealed class RouletteRepository : RepositoryBase<Roulette>//, IDisposable
 {
     public RouletteRepository(IConnectionMultiplexer redis)
         : base(redis.GetDatabase(), "Roulettes")

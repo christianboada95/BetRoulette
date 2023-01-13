@@ -1,0 +1,264 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BetRoulette.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/Bets": {
+      "post": {
+        "tags": [
+          "Bets"
+        ],
+        "operationId": "CreateBet",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBetRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBetRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Roulettes": {
+      "post": {
+        "tags": [
+          "Roulettes"
+        ],
+        "operationId": "CreateRoulette",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRouletteRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRouletteRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRouletteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Roulettes"
+        ],
+        "operationId": "GetRoulettes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouletteListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouletteListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouletteListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Roulettes/{rouletteId}": {
+      "get": {
+        "tags": [
+          "Roulettes"
+        ],
+        "parameters": [
+          {
+            "name": "rouletteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Roulettes/{rouletteId}/Open": {
+      "post": {
+        "tags": [
+          "Roulettes"
+        ],
+        "parameters": [
+          {
+            "name": "rouletteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Roulettes/{rouletteId}/Close": {
+      "post": {
+        "tags": [
+          "Roulettes"
+        ],
+        "parameters": [
+          {
+            "name": "rouletteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Color": {
+        "enum": [
+          "Black",
+          "Red"
+        ],
+        "type": "string"
+      },
+      "CreateBetRequest": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "maximum": 36,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "color": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "amount": {
+            "maximum": 10000,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateRouletteRequest": {
+        "required": [
+          "rouletteName"
+        ],
+        "type": "object",
+        "properties": {
+          "rouletteName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RouletteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "$ref": "#/components/schemas/RouletteState"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RouletteListResponse": {
+        "type": "object",
+        "properties": {
+          "roulettes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouletteDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RouletteState": {
+        "enum": [
+          "Open",
+          "Close"
+        ],
+        "type": "string"
+      }
+    }
+  }
+}

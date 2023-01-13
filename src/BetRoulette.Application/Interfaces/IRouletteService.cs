@@ -6,7 +6,7 @@ public interface IRouletteService
 {
     Task<Roulette> Create(string rouletteName);
     Task<Roulette> Get(string rouletteId);
-    Task<Roulette[]> ListAll();
+    Task<List<Roulette>> ListAll();
     Task Open(string rouletteId);
     Task Close(string rouletteId);
 }

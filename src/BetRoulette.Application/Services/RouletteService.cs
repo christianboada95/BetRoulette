@@ -31,23 +31,36 @@ namespace BetRoulette.Application.Services
             return roulette;
         }
 
-        public async Task<Roulette[]> ListAll()
+        public async Task<List<Roulette>> ListAll()
         {
             var list = await _rouletteRepository.ListAsync().ConfigureAwait(false);
-            return list.ToArray();
+            return list;
         }
 
         public async Task Open(string rouletteId)
         {
             var roulette = await Get(rouletteId);
-            roulette.State = RouletteState.Open;
+            if (ListAll().Result.Any(x => x.State == RouletteState.Open))
+                throw new ConflictOpenRouletteException("Another roulette is already open");
 
+            roulette.State = RouletteState.Open;
             await _rouletteRepository.UpdateAsync(roulette).ConfigureAwait(false);
         }
 
-        public Task Close(string rouletteId)
+        public async Task Close(string rouletteId)
         {
-            throw new NotImplementedException();
+            var roulette = await Get(rouletteId);
+            if (roulette.State is RouletteState.Close)
+                throw new ConflictOpenRouletteException("Roulette is already close");
+
+            // Generar numero al azar
+            // recorrer lista de apuestas
+            // validar la apuesta con el valor generado aleatoriamente
+            // Llenar campo profit con el valor pertinente
+            // Guardar numero ganador ne la ruleta
+            // Cambiar estado de ruleta a cerrado
+            roulette.State = RouletteState.Close;
+            await _rouletteRepository.UpdateAsync(roulette).ConfigureAwait(false);
         }
     }
 }

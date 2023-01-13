@@ -10,6 +10,7 @@ public static class StartupSetup
     {
         // Services
         services.AddScoped<IRouletteService, RouletteService>();
+        services.AddScoped<IBetService, BetService>();
 
         // Mappings
         //services.AddAutoMapper(typeof(MappingProfile).Assembly);
