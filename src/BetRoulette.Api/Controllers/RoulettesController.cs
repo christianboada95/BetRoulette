@@ -47,7 +47,18 @@ public class RoulettesController : ControllerBase
     public async Task<ActionResult> GetRoulette([FromRoute] Guid rouletteId)
     {
         var roulette = await _rouletteService.Get(rouletteId.ToString()).ConfigureAwait(false);
-        return Ok(RouletteResponse.Success(roulette));
+        RouletteDto rouletteDto = new(roulette.Id.ToString(), roulette.Name, roulette.State)
+        {
+            Result = roulette.Result,
+            Bets = roulette.Bets!.Select(b => new BetDto(b.Amount, b.User)
+            {
+                Value = b.Value,
+                Color = b.Color,
+                State = b.State,
+                Profits = (int)b.Profits
+            }).ToList()
+        };
+        return Ok(RouletteResponse.Success(rouletteDto));
     }
 
     [HttpPost("{rouletteId:guid}/Open")]
@@ -70,7 +81,7 @@ public class RoulettesController : ControllerBase
                 Value = b.Value,
                 Color = b.Color,
                 State = b.State,
-                Profits = b.Profits
+                Profits = (int)b.Profits
             }).ToList()
         };
         var response = new RouletteBetsResponse(rouletteDto, "Roulette close successfully.");

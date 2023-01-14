@@ -6,6 +6,6 @@ public record BetDto(int Amount, string User)
 {
     public short? Value { get; set; }
     public Color? Color { get; set; }
-    public BetState? State { get; set; }
-    public double? Profits { get; set; }
+    public BetState? State { get; set; } = BetState.Progress;
+    public int? Profits { get; set; }
 }
