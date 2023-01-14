@@ -43,14 +43,14 @@ namespace BetRoulette.Application.Services
         public async Task Open(string rouletteId)
         {
             var roulette = await Get(rouletteId);
-            //if (ListAll().Result.Any(x => x.State == RouletteState.Open))
-            //    throw new ConflictOpenRouletteException("Another roulette is already open");
+            if (roulette.State == RouletteState.Open)
+                throw new ConflictOpenRouletteException("Roulette is already open");
 
             roulette.Open();
             await _rouletteRepository.UpdateAsync(roulette).ConfigureAwait(false);
         }
 
-        public async Task Close(string rouletteId)
+        public async Task<Roulette> Close(string rouletteId)
         {
             var roulette = await Get(rouletteId);
             if (roulette.State is RouletteState.Close)
@@ -59,13 +59,14 @@ namespace BetRoulette.Application.Services
             // Generar numero al azar
             int result = roulette.Rol();
             // Solo las apuestas nuevas
-            foreach (Bet x in roulette.Bets!.Where(b => b.State is BetState.Progress))
-            {
-                x.ValidateResult((short)result);
-            }
-            // Cambiar estado de ruleta a cerrado
+            var progressList = roulette.Bets!.Where(b => b.State is BetState.Progress).ToList();
+            progressList.ForEach(x => x.ValidateResult((short)result));
+
             roulette.Close();
             await _rouletteRepository.UpdateAsync(roulette).ConfigureAwait(false);
+            // Retorno solo la lista de los resultados nuevos
+            roulette.Bets = progressList;
+            return roulette;
         }
     }
 }

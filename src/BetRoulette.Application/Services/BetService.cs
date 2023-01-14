@@ -32,20 +32,22 @@ namespace BetRoulette.Application.Services
         {
             var list = await _rouletteRepository.ListAsync();
             if (list is null)
-                throw new NotFoundRouletteException($"No record found in Database");
+                throw new NotFoundRouletteException($"No Roulette in Database");
 
-            var openlist = list.Where(x => x.State is RouletteState.Open);
-            if (!openlist.Any())
+            var openList = list.Where(x => x.State is RouletteState.Open).ToArray();
+            if (!openList.Any())
                 throw new ConflictOpenRouletteException("No Roulette is open.");
 
-            return list[Random.Shared.Next(openlist.Count())];
+            return openList[Random.Shared.Next(openList.Length)];
         }
 
         public async Task ToBet(BetDto betDto)
         {
-            Bet bet = new Bet(betDto.Amount, betDto.User);
-            bet.Value = betDto.Value;
-            bet.Color = betDto.Color;
+            Bet bet = new(betDto.Amount, betDto.User)
+            {
+                Value = betDto.Value,
+                Color = betDto.Color
+            };
 
             var roulette = await GetRandomOpenRoulette();
             roulette.Bets!.Add(bet);

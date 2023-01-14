@@ -8,5 +8,5 @@ public interface IRouletteService
     Task<Roulette> Get(string rouletteId);
     Task<List<Roulette>> ListAll();
     Task Open(string rouletteId);
-    Task Close(string rouletteId);
+    Task<Roulette> Close(string rouletteId);
 }

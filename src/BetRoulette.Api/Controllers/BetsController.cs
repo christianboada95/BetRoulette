@@ -41,15 +41,13 @@ public class BetsController : ControllerBase
                 ErrorResponse.Failure(AppStatusCode.ModelValidationError, x.ErrorMessage)));
         }
 
-        var bet = new BetDto()
+        var bet = new BetDto(request.Amount, userId)
         {
-            Amount = request.Amount,
             Color = request.Color,
-            Value = request.Value,
-            User = userId
+            Value = request.Value
         };
         await _betService.ToBet(bet).ConfigureAwait(false);
-        return Accepted(BetResponse.Success("bet accepted successfully."));
+        return Accepted(BetResponse.Success(bet, "bet accepted successfully."));
     }
 
 }

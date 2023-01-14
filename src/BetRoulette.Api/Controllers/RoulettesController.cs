@@ -35,7 +35,7 @@ public class RoulettesController : ControllerBase
     [HttpGet(Name = "GetRoulettes")]
     public async Task<ActionResult<RouletteListResponse>> Get()
     {
-        var values = await _rouletteService.ListAll();
+        var values = await _rouletteService.ListAll().ConfigureAwait(false);
         var response = new RouletteListResponse(values
                 .Select(r => new RouletteDto(r.Id.ToString(), r.Name, r.State))
                 .ToList(), "Roulette List");
@@ -58,10 +58,23 @@ public class RoulettesController : ControllerBase
         return Ok(RouletteResponse.Success("Roulette open successfully."));
     }
     [HttpPost("{rouletteId:guid}/Close")]
-    public async Task<IActionResult> CloseRoulette([FromRoute] Guid rouletteId)
+    public async Task<ActionResult<RouletteBetsResponse>> CloseRoulette([FromRoute] Guid rouletteId)
     {
         _logger.LogInformation(rouletteId.ToString());
-        await _rouletteService.Close(rouletteId.ToString()).ConfigureAwait(false);
-        return Ok(RouletteResponse.Success("Roulette close successfully."));
+        var roulette = await _rouletteService.Close(rouletteId.ToString()).ConfigureAwait(false);
+        RouletteDto rouletteDto = new(roulette.Id.ToString(), roulette.Name, roulette.State)
+        {
+            Result = roulette.Result,
+            Bets = roulette.Bets!.Select(b => new BetDto(b.Amount, b.User)
+            {
+                Value = b.Value,
+                Color = b.Color,
+                State = b.State,
+                Profits = b.Profits
+            }).ToList()
+        };
+        var response = new RouletteBetsResponse(rouletteDto, "Roulette close successfully.");
+
+        return Ok(response);
     }
 }
