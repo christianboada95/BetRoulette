@@ -1,6 +1,7 @@
 ﻿namespace BetRoulette.Application.DataTransferObjects.Responses;
 
-public class RouletteListResponse
+public class RouletteListResponse : Response
 {
-    public List<RouletteDto> Roulettes { get; set; } = new();
+    public RouletteListResponse(List<RouletteDto> data, string message) 
+        : base(data, message) { }
 }

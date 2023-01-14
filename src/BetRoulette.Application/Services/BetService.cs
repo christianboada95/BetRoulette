@@ -28,13 +28,26 @@ namespace BetRoulette.Application.Services
             return list.FirstOrDefault(x => x.State == RouletteState.Open)!;
         }
 
+        private async Task<Roulette> GetRandomOpenRoulette()
+        {
+            var list = await _rouletteRepository.ListAsync();
+            if (list is null)
+                throw new NotFoundRouletteException($"No record found in Database");
+
+            var openlist = list.Where(x => x.State is RouletteState.Open);
+            if (!openlist.Any())
+                throw new ConflictOpenRouletteException("No Roulette is open.");
+
+            return list[Random.Shared.Next(openlist.Count())];
+        }
+
         public async Task ToBet(BetDto betDto)
         {
             Bet bet = new Bet(betDto.Amount, betDto.User);
             bet.Value = betDto.Value;
             bet.Color = betDto.Color;
 
-            var roulette = await GetCurrentOpenRoulette();
+            var roulette = await GetRandomOpenRoulette();
             roulette.Bets!.Add(bet);
             await _rouletteRepository.UpdateAsync(roulette);
         }

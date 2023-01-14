@@ -17,4 +17,14 @@ public class Roulette : EntityBase
         Bets = new List<Bet>();
         State = RouletteState.Close;
     }
+
+    public int Rol()
+    {
+        int winningNumber = Random.Shared.Next(0, 36);
+        Result = (short)winningNumber;
+        return winningNumber;
+    }
+
+    public void Open() => State = RouletteState.Open;
+    public void Close() => State = RouletteState.Close;
 }

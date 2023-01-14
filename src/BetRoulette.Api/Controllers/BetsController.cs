@@ -49,7 +49,7 @@ public class BetsController : ControllerBase
             User = userId
         };
         await _betService.ToBet(bet).ConfigureAwait(false);
-        return Accepted(new { message = "bet accepted successfully." });
+        return Accepted(BetResponse.Success("bet accepted successfully."));
     }
 
 }

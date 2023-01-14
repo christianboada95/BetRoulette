@@ -28,19 +28,17 @@ public class RoulettesController : ControllerBase
         var roulette = await _rouletteService.Create(request.RouletteName);
         var actionName = nameof(GetRoulette);
         var routeValues = new { rouletteId = roulette.Id };
-        return CreatedAtAction(actionName, routeValues, roulette);
+        return CreatedAtAction(actionName, routeValues,
+            RouletteResponse.Success(roulette, "Roulette created successfully."));
     }
 
     [HttpGet(Name = "GetRoulettes")]
     public async Task<ActionResult<RouletteListResponse>> Get()
     {
         var values = await _rouletteService.ListAll();
-        var response = new RouletteListResponse
-        {
-            Roulettes = values
+        var response = new RouletteListResponse(values
                 .Select(r => new RouletteDto(r.Id.ToString(), r.Name, r.State))
-                .ToList(),
-        };
+                .ToList(), "Roulette List");
 
         return Ok(response);
     }
@@ -49,7 +47,7 @@ public class RoulettesController : ControllerBase
     public async Task<ActionResult> GetRoulette([FromRoute] Guid rouletteId)
     {
         var roulette = await _rouletteService.Get(rouletteId.ToString()).ConfigureAwait(false);
-        return Ok(roulette);
+        return Ok(RouletteResponse.Success(roulette));
     }
 
     [HttpPost("{rouletteId:guid}/Open")]
@@ -57,13 +55,13 @@ public class RoulettesController : ControllerBase
     {
         _logger.LogInformation(rouletteId.ToString());
         await _rouletteService.Open(rouletteId.ToString()).ConfigureAwait(false);
-        return Ok("Roulette open successfully.");
+        return Ok(RouletteResponse.Success("Roulette open successfully."));
     }
     [HttpPost("{rouletteId:guid}/Close")]
     public async Task<IActionResult> CloseRoulette([FromRoute] Guid rouletteId)
     {
         _logger.LogInformation(rouletteId.ToString());
         await _rouletteService.Close(rouletteId.ToString()).ConfigureAwait(false);
-        return Ok("Roulette close successfully.");
+        return Ok(RouletteResponse.Success("Roulette close successfully."));
     }
 }

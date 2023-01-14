@@ -12,7 +12,7 @@ public class Bet : EntityBase
     public Color? Color { get; set; }
 
     public BetState? State { get; set; }
-    public int? Profits { get; set; }
+    public double Profits { get; set; } = 0f;
 
     public Bet(int amount, string user)
     {
@@ -21,4 +21,25 @@ public class Bet : EntityBase
         User = user;
         State = BetState.Progress;
     }
+
+    public void ValidateResult(short result)
+    {
+        if (IsValueBet() && Value == result)
+        {
+            Profits = Amount * 5;
+            State = BetState.Win;
+            return;
+        }
+        if (IsColorBet() && ((IsPair(result) && Color is Enums.Color.Red) ||
+                             !IsPair(result) && Color is Enums.Color.Black))
+        {
+            Profits = Amount * 1.8f;
+            State = BetState.Win;
+            return;
+        }
+        State = BetState.Lose;
+    }
+    private bool IsPair(short result) => result % 2 == 0;
+    private bool IsColorBet() => Color is not null;
+    private bool IsValueBet() => Value is not null;
 }
