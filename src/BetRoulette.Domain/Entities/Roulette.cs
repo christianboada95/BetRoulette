@@ -7,7 +7,7 @@ public class Roulette : EntityBase
 {
     public string Name { get; set; }
     public short? Result { get; set; }
-    public List<Bet>? Bets { get; set; }
+    public List<Bet> Bets { get; set; }
     public RouletteState State { get; set; }
 
     public Roulette(string name)

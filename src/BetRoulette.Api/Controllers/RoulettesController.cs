@@ -18,14 +18,15 @@ public class RoulettesController : ControllerBase
         ILogger<RoulettesController> logger,
         IRouletteService rouletteService)
     {
-        _logger = logger;
-        _rouletteService = rouletteService;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _rouletteService = rouletteService ?? throw new ArgumentNullException(nameof(rouletteService));
     }
 
     [HttpPost(Name = "CreateRoulette")]
     public async Task<IActionResult> Post([FromBody] CreateRouletteRequest request)
     {
         var roulette = await _rouletteService.Create(request.RouletteName);
+
         var actionName = nameof(GetRoulette);
         var routeValues = new { rouletteId = roulette.Id };
         return CreatedAtAction(actionName, routeValues,

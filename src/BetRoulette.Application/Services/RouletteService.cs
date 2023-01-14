@@ -6,7 +6,7 @@ using BetRoulette.Domain.Interfaces;
 
 namespace BetRoulette.Application.Services
 {
-    internal class RouletteService : IRouletteService
+    public class RouletteService : IRouletteService
     {
         private readonly IRepository<Roulette> _rouletteRepository;
 

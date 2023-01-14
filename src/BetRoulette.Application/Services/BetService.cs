@@ -7,13 +7,13 @@ using BetRoulette.Domain.Interfaces;
 
 namespace BetRoulette.Application.Services
 {
-    internal class BetService : IBetService
+    public class BetService : IBetService
     {
         private readonly IRepository<Roulette> _rouletteRepository;
 
         public BetService(IRepository<Roulette> rouletteRepository)
         {
-            _rouletteRepository = rouletteRepository;
+            _rouletteRepository = rouletteRepository ?? throw new ArgumentNullException(nameof(rouletteRepository));
         }
 
         private async Task<Roulette> GetCurrentOpenRoulette()
